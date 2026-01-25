@@ -31,7 +31,7 @@ class Graph{
     }
     void loadEdgesFromFile(){
         ifstream file("distance.txt");
-        if (!file) return;
+        if (!file) cout<<"File not found";
         string from;
         string to;
         int dist;
@@ -160,9 +160,11 @@ class Graph{
 int main(){
     Graph g;
     g.loadEdgesFromFile();
-    //g.addEdge("Delhi","Jaipur",280);
-    //g.addEdge("Delhi","Bikaner",330);
-    //g.displayGraph();
+    
+    g.BFS("Jaipur");
+    cout<<endl;
+    g.DFS("Jaipur");
+    cout<<endl;
     g.dijkstra("Delhi","Udaipur");
 }
 

@@ -4,6 +4,9 @@
 #include <vector>
 #include <queue>
 #include <stack>
+#include <climits>
+#include <fstream>
+#include <algorithm>
 using namespace std;
 
 struct Route{
@@ -25,6 +28,25 @@ class Graph{
         r2.to = from;
         r2.distance = distance;
         adj[to].push_back(r2);
+    }
+    void loadEdgesFromFile(){
+        ifstream file("distance.txt");
+        if (!file) return;
+        string from;
+        string to;
+        int dist;
+        while (file>>from>>to>>dist){
+            Route r1;
+            r1.to = to;
+            r1.distance = dist;
+            adj[from].push_back(r1);
+
+            Route r2;
+            r2.to = from;
+            r2.distance = dist;
+            adj[to].push_back(r2);
+        }
+
     }
     void displayGraph(){
         for (auto &p : adj){
@@ -82,11 +104,65 @@ class Graph{
             }
         }
     }
+    void dijkstra(string startCity,string endCity){
+        unordered_map<string,int>dist; //stores city name and distance from start city
+        unordered_map<string,string> parent;
+        for (auto &p : adj){
+            dist[p.first] = INT_MAX;
+        }
+        dist[startCity] = 0;
+        priority_queue<
+        pair<int,string>,             //city name and distance
+        vector<pair<int,string>>,     //storing container
+        greater<pair<int,string>>     //comparator - shortest first
+        >pq ;
+        pq.push({0,startCity});      //push only start city
+        while (!pq.empty()){
+            auto current = pq.top();
+            pq.pop();
+
+            int currDist = current.first;
+            string currCity = current.second;
+
+            if(currDist > dist[currCity]) continue;
+        
+        for (Route r : adj[currCity]){
+            int newDist = currDist + r.distance;
+
+            if (newDist<dist[r.to]){
+                dist[r.to] = newDist;
+                parent[r.to] = currCity;
+                pq.push({newDist,r.to});
+            }
+        }
+    }
+        if (dist[endCity]==INT_MAX){
+            cout<<"No path exists\n";
+            return;
+        }
+        vector <string> path;
+        string curr = endCity;
+        while (curr!=startCity){
+            path.push_back(curr);
+            curr = parent[curr];
+        }
+        path.push_back(startCity);
+
+        reverse(path.begin(),path.end());
+
+        cout<<"Shortest path: ";
+        for (string city : path){
+            cout<<city<<" ";
+        }
+        cout<<endl;
+    }
 };
 int main(){
     Graph g;
-    g.addEdge("Delhi","Jaipur",280);
-    g.addEdge("Delhi","Bikaner",330);
-    g.displayGraph();
+    g.loadEdgesFromFile();
+    //g.addEdge("Delhi","Jaipur",280);
+    //g.addEdge("Delhi","Bikaner",330);
+    //g.displayGraph();
+    g.dijkstra("Delhi","Udaipur");
 }
 

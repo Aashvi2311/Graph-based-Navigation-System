@@ -1,0 +1,12 @@
+Delhi Jaipur 280
+Delhi Bikaner 330
+Jaipur Ajmer 135
+Ajmer Udaipur 270
+Jaipur Kota 250
+Kota Bhopal 295
+Bhopal Indore 190
+Indore Ujjain 55
+Delhi Agra 233
+Agra Gwalior 121
+Gwalior Bhopal 426
+Jaipur Delhi 280
